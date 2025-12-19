@@ -1,4 +1,4 @@
-import sequelize from "sequelize";
+import Sequelize from "sequelize";
 import userModel from "./user.model.js";
 import noteModel from "./note.model.js";
 import noteHistoryModel from "./notehistory.model.js";
