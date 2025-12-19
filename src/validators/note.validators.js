@@ -12,9 +12,9 @@ export const validateNoteCreation = (noteData) => {
   return errors;
 };
 
-export const validateNoteUpdate = ({ title, content, version }) => {
+export const validateNoteUpdate = ({ title, content, versionNumber }) => {
   if (!title || !content) return "title and content are required";
-  if (typeof version !== "number")
+  if (typeof versionNumber !== "number")
     return "version is required and must be a number";
   return null;
 };

@@ -62,8 +62,50 @@ const getNoteById = async ({ noteId, userId }) => {
   return result;
 };
 
+const updateNote = async ({ noteId, userId, title, content, versionNumber }) => {
+  const note = await noteRepo.findByIdAndUser(noteId, userId);
+  if (!note) {
+    const err = new Error("Note not found");
+    err.statusCode = 404;
+    throw err;
+  }
+
+  if (note.currentVersion !== versionNumber) {
+    const err = new Error("Version conflict. Please refresh.");
+    err.statusCode = 409;
+    throw err;
+  }
+
+  const newVersion = versionNumber + 1;
+
+  await noteHistoryRepo.createHistory({
+    noteId,
+    versionNumber: newVersion,
+    title,
+    content,
+  });
+
+  const updated = await noteRepo.updateNoteVersion({
+    noteId,
+    userId,
+    newVersion,
+  });
+
+  if (!updated) {
+    const err = new Error("Concurrent update detected");
+    err.statusCode = 409;
+    throw err;
+  }
+
+  await cacheService.del(`notes:user:${userId}`);
+  await cacheService.del(`note:${noteId}`);
+
+  return { id: noteId, version: newVersion };
+};
+
 export default {
   createNote,
   getAllNotes,
   getNoteById,
+  updateNote,
 };
