@@ -62,7 +62,13 @@ const getNoteById = async ({ noteId, userId }) => {
   return result;
 };
 
-const updateNote = async ({ noteId, userId, title, content, versionNumber }) => {
+const updateNote = async ({
+  noteId,
+  userId,
+  title,
+  content,
+  versionNumber,
+}) => {
   const note = await noteRepo.findByIdAndUser(noteId, userId);
   if (!note) {
     const err = new Error("Note not found");
@@ -143,6 +149,14 @@ const revertNote = async ({ noteId, userId, targetVersion }) => {
   return { id: noteId, version: newVersion };
 };
 
+const searchNotes = async ({ userId, keyword }) => {
+  if (!keyword || keyword.trim() === "") {
+    const err = new Error("Keyword cannot be empty");
+    err.statusCode = 400;
+    throw err;
+  }
+  return noteHistoryRepo.searchLatestNotes({ userId, keyword });
+};
 
 export default {
   createNote,
@@ -150,4 +164,5 @@ export default {
   getNoteById,
   updateNote,
   revertNote,
+  searchNotes
 };

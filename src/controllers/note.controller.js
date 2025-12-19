@@ -74,3 +74,17 @@ export const revertNote = async (req, res, next) => {
     next(err);
   }
 };
+
+export const searchNotes = async (req, res, next) => {
+  try {
+    const data = await noteService.searchNotes({
+      userId: req.user.id,
+      keyword: req.query.q,
+    });
+
+    res.status(200).json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+};
+
