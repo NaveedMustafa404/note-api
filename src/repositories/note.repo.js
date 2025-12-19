@@ -23,8 +23,26 @@ const findByIdAndUser = async (id, userId) => {
   return Note.findOne({ where: { id, userId } });
 };
 
+const updateNoteVersion = async ({ noteId, userId, newVersion }) => {
+  const { Note } = getModels();
+
+  const [updatedRows] = await Note.update(
+    { currentVersion: newVersion },
+    {
+      where: {
+        id: noteId,
+        userId,
+        currentVersion: newVersion - 1,
+      },
+    }
+  );
+
+  return updatedRows; 
+};
+
 export default {
   createNote,
   findAllByUser,
   findByIdAndUser,
+  updateNoteVersion
 };
