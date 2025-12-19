@@ -1,5 +1,5 @@
 import noteRepo from "../repositories/note.repo.js";
-import noteHistoryRepo from "../repositories/noteHistories.repo.js";
+import noteHistoryRepo from "../repositories/noteHistory.repo.js";
 import cacheService from "./cache.service.js";
 
 const createNote = async ({ userId, title, content }) => {
