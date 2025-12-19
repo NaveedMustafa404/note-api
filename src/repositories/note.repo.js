@@ -48,10 +48,16 @@ const softDeleteNote = async ({ noteId, userId }) => {
     return noteDeleted;
 }
 
+const findById = async (id) => {
+  const { Note } = getModels();
+  return Note.findOne({ where: { id } });
+};
+
 export default {
   createNote,
   findAllByUser,
   findByIdAndUser,
   updateNoteVersion,
-  softDeleteNote
+  softDeleteNote,
+  findById
 };
