@@ -1,6 +1,6 @@
 import {generateToken} from "../utils/jwt.js";
 import {hashPassword , verifyPassword} from "../utils/password.js";
-import {userRepo} from "../repositories/user.repo.js";
+import userRepo from "../repositories/user.repo.js";
 
 const register = async (userData) => {
     const { email, pass } = userData;
