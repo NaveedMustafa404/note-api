@@ -3,7 +3,7 @@ import { initModels } from "../models/index.js";
 
 let sequelize;
 
-export const connectDB = async () => {
+export const connectDB = () => {
     if (!sequelize) {
         sequelize = new Sequelize(
             process.env.DB_NAME,

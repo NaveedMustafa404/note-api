@@ -3,15 +3,15 @@ import {hashPassword , verifyPassword} from "../utils/password.js";
 import userRepo from "../repositories/user.repo.js";
 
 const register = async (userData) => {
-    const { email, pass } = userData;
+    const { email, password } = userData;
     const existingUser = await userRepo.findUserByEmail(email);
     if (existingUser) {
         const error = new Error("User already exists");
         error.status = 409;
         throw error;
     }
-    const hashedPass =  await hashPassword(pass);
-    const newUser = await userRepo.createUser({ email, pass: hashedPass });
+    const hashedPass =  await hashPassword(password);
+    const newUser = await userRepo.createUser({ email, password: hashedPass });
     return { id: newUser.id, email: newUser.email };
 }
 

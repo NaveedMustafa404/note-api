@@ -5,12 +5,13 @@ const getModels = () => {
     return sequelize.models;
 }
 export const findUserByEmail = async (email) => {
-    const { User } = await getModels();
+    const { User } = getModels();
     return User.findOne({ where: { email } });
 }
 
-export const createUser = async ({email, pass}) => {
-    const { User } = await getModels();
-    return User.create({ email, pass });
+export const createUser = async ({email, password}) => {
+    const { User } = getModels();
+    return User.create({ email, password });
 }
 export default { findUserByEmail, createUser };
+
