@@ -18,7 +18,7 @@ export default (sequelize, DataTypes) => {
     {
       tableName: "note_shares",
       underscored: true,
-      timestamps: true,
+      timestamps: false,
     }
   );
 
