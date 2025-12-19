@@ -88,3 +88,17 @@ export const searchNotes = async (req, res, next) => {
   }
 };
 
+export const deleteNote = async (req, res, next) => {
+  try {
+    const data = await noteService.deleteNote({
+      noteId: req.params.id,
+      userId: req.user.id,
+    });
+
+    res.status(200).json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+};
+
+

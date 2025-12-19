@@ -158,11 +158,27 @@ const searchNotes = async ({ userId, keyword }) => {
   return noteHistoryRepo.searchLatestNotes({ userId, keyword });
 };
 
+const deleteNote = async ({ noteId, userId }) => {
+  const deleted = await noteRepo.softDeleteNote({ noteId, userId });
+
+  if (!deleted) {
+    const err = new Error("Note not found");
+    err.statusCode = 404;
+    throw err;
+  }
+
+  await cacheService.del(`notes:user:${userId}`);
+  await cacheService.del(`note:${noteId}`);
+
+  return { id: noteId, deleted: true };
+};
+
 export default {
   createNote,
   getAllNotes,
   getNoteById,
   updateNote,
   revertNote,
-  searchNotes
+  searchNotes,
+  deleteNote
 };

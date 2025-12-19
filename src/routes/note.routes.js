@@ -1,6 +1,14 @@
 import { Router } from "express";
 import { isAuthenticated } from "../middlewares/auth.middleware.js";
-import {createNote, getAllNotes,getNoteById, updateNote, revertNote, searchNotes } from "../controllers/note.controller.js";
+import {
+  createNote,
+  getAllNotes,
+  getNoteById,
+  updateNote,
+  revertNote,
+  searchNotes,
+  deleteNote,
+} from "../controllers/note.controller.js";
 
 const router = Router();
 
@@ -12,5 +20,6 @@ router.get("/by/:id", getNoteById);
 router.put("/update/:id", updateNote);
 router.post("/revert/:id", revertNote);
 router.get("/search", searchNotes);
+router.delete("/delete/:id", deleteNote);
 
 export default router;

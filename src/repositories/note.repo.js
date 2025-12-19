@@ -40,9 +40,18 @@ const updateNoteVersion = async ({ noteId, userId, newVersion }) => {
   return updatedRows; 
 };
 
+const softDeleteNote = async ({ noteId, userId }) => {
+    const { Note } = getModels();
+    const noteDeleted = await Note.destroy({
+        where: {id: noteId, userId}
+    });
+    return noteDeleted;
+}
+
 export default {
   createNote,
   findAllByUser,
   findByIdAndUser,
-  updateNoteVersion
+  updateNoteVersion,
+  softDeleteNote
 };
