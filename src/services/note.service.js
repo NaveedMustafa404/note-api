@@ -103,9 +103,51 @@ const updateNote = async ({ noteId, userId, title, content, versionNumber }) => 
   return { id: noteId, version: newVersion };
 };
 
+const revertNote = async ({ noteId, userId, targetVersion }) => {
+  const note = await noteRepo.findByIdAndUser(noteId, userId);
+  if (!note) {
+    const err = new Error("Note not found");
+    err.statusCode = 404;
+    throw err;
+  }
+
+  const revertVersion = await noteHistoryRepo.findLatestVersionByNote(
+    noteId,
+    targetVersion
+  );
+
+  if (!revertVersion) {
+    const err = new Error("Target version not found");
+    err.statusCode = 404;
+    throw err;
+  }
+
+  const newVersion = note.currentVersion + 1;
+
+  await noteHistoryRepo.createHistory({
+    noteId,
+    versionNumber: newVersion,
+    title: revertVersion.title,
+    content: revertVersion.content,
+  });
+
+  await noteRepo.updateNoteVersion({
+    noteId,
+    userId,
+    newVersion,
+  });
+
+  await cacheService.del(`notes:user:${userId}`);
+  await cacheService.del(`note:${noteId}`);
+
+  return { id: noteId, version: newVersion };
+};
+
+
 export default {
   createNote,
   getAllNotes,
   getNoteById,
   updateNote,
+  revertNote,
 };

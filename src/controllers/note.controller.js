@@ -60,3 +60,17 @@ export const updateNote = async (req, res, next) => {
     next(err);
   }
 };
+
+export const revertNote = async (req, res, next) => {
+  try {
+    const data = await noteService.revertNote({
+      noteId: req.params.id,
+      userId: req.user.id,
+      targetVersion: Number(req.body.version),
+    });
+
+    res.status(200).json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+};
