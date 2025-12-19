@@ -1,6 +1,7 @@
 
 import express from "express";
 import {connectDB} from "./config/database.js";
+import { initRedis } from "./config/redis.js";
 import routes from "./routes/index.js";
 import errorMiddleware from "./middlewares/error.middleware.js";
 
