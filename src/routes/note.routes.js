@@ -9,7 +9,7 @@ import {
   searchNotes,
   deleteNote,
 } from "../controllers/note.controller.js";
-import { shareNote } from "../controllers/share.controller.js";
+import { shareNote, getSharedWithMe } from "../controllers/share.controller.js";
 
 const router = Router();
 
@@ -25,5 +25,6 @@ router.delete("/delete/:id", deleteNote);
 
 // Note share
 router.post("/share/:id", shareNote);
+router.get("/shared-with-me", getSharedWithMe);
 
 export default router;

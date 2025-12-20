@@ -18,3 +18,12 @@ export const shareNote = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getSharedWithMe = async (req, res, next) => {
+  try {
+    const data = await shareService.getSharedWithMe({ userId: req.user.id });
+    res.status(200).json({ success: true, data });
+  } catch (err) {
+    next(err);
+  }
+};

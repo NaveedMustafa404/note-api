@@ -1,6 +1,7 @@
 import noteRepo from "../repositories/note.repo.js";
 import noteHistoryRepo from "../repositories/noteHistory.repo.js";
 import cacheService from "./cache.service.js";
+import permissionService from "./permission.service.js";
 
 const createNote = async ({ userId, title, content }) => {
   const note = await noteRepo.createNote(userId);
@@ -39,12 +40,17 @@ const getNoteById = async ({ noteId, userId }) => {
   const cached = await cacheService.get(cacheKey);
   if (cached) return cached;
 
-  const note = await noteRepo.findByIdAndUser(noteId, userId);
-  if (!note) {
-    const err = new Error("Note not found");
-    err.statusCode = 404;
-    throw err;
-  }
+  // We are using permission service to check access rights
+
+  // previous implementation: Owner specific
+  //   const note = await noteRepo.findByIdAndUser(noteId, userId);
+  //   if (!note) {
+  //     const err = new Error("Note not found");
+  //     err.statusCode = 404;
+  //     throw err;
+  //   }
+
+  const { note } = await permissionService.canReadNote({ noteId, userId });
 
   const version = await noteHistoryRepo.findLatestVersionByNote(
     note.id,
@@ -62,19 +68,17 @@ const getNoteById = async ({ noteId, userId }) => {
   return result;
 };
 
-const updateNote = async ({
-  noteId,
-  userId,
-  title,
-  content,
-  versionNumber,
-}) => {
-  const note = await noteRepo.findByIdAndUser(noteId, userId);
-  if (!note) {
-    const err = new Error("Note not found");
-    err.statusCode = 404;
-    throw err;
-  }
+const updateNote = async ({noteId,userId,title,content,versionNumber}) => {
+
+    // We are using permission service to check access rights
+  //   const note = await noteRepo.findByIdAndUser(noteId, userId);
+  //   if (!note) {
+  //     const err = new Error("Note not found");
+  //     err.statusCode = 404;
+  //     throw err;
+  //   }
+
+  const note = await permissionService.canEditNote({ noteId, userId });
 
   if (note.currentVersion !== versionNumber) {
     const err = new Error("Version conflict. Please refresh.");
@@ -93,7 +97,7 @@ const updateNote = async ({
 
   const updated = await noteRepo.updateNoteVersion({
     noteId,
-    userId,
+    userId: note.userId,
     newVersion,
   });
 
@@ -110,12 +114,15 @@ const updateNote = async ({
 };
 
 const revertNote = async ({ noteId, userId, targetVersion }) => {
-  const note = await noteRepo.findByIdAndUser(noteId, userId);
-  if (!note) {
-    const err = new Error("Note not found");
-    err.statusCode = 404;
-    throw err;
-  }
+
+    // We are using permission service to check access rights
+  //   const note = await noteRepo.findByIdAndUser(noteId, userId);
+  //   if (!note) {
+  //     const err = new Error("Note not found");
+  //     err.statusCode = 404;
+  //     throw err;
+  //   }
+  const note = await permissionService.canEditNote({ noteId, userId });
 
   const revertVersion = await noteHistoryRepo.findLatestVersionByNote(
     noteId,
@@ -139,7 +146,7 @@ const revertNote = async ({ noteId, userId, targetVersion }) => {
 
   await noteRepo.updateNoteVersion({
     noteId,
-    userId,
+    userId: note.userId,
     newVersion,
   });
 
@@ -180,5 +187,5 @@ export default {
   updateNote,
   revertNote,
   searchNotes,
-  deleteNote
+  deleteNote,
 };

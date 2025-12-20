@@ -1,4 +1,3 @@
-
 import noteRepo from "../repositories/note.repo.js";
 import userRepo from "../repositories/user.repo.js";
 import noteShareRepo from "../repositories/noteShare.repo.js";
@@ -37,4 +36,8 @@ const shareNote = async ({ ownerId, noteId, email, permission }) => {
   };
 };
 
-export default { shareNote };
+const getSharedWithMe = async ({ userId }) => {
+  return noteShareRepo.listSharedWithMe({ userId });
+};
+
+export default { shareNote, getSharedWithMe };

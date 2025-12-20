@@ -1,4 +1,3 @@
-// src/services/permission.service.js
 import noteRepo from "../repositories/note.repo.js";
 import noteShareRepo from "../repositories/noteShare.repo.js";
 
@@ -32,10 +31,11 @@ export const canEditNote = async ({ noteId, userId }) => {
   const { note, permission } = await canReadNote({ noteId, userId });
 
   if (permission !== "edit") {
-    const err = new Error("Forbidden");
+    const err = new Error("Forbidden! You do not have edit access to this note.");
     err.statusCode = 403;
     throw err;
   }
 
   return note;
 };
+export default { canReadNote, canEditNote };
