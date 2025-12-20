@@ -36,8 +36,37 @@ const shareNote = async ({ ownerId, noteId, email, permission }) => {
   };
 };
 
+const unshareNote = async ({ ownerId, noteId, email }) => {
+  const note = await noteRepo.findByIdAndUser(noteId, ownerId);
+  if (!note) {
+    const err = new Error("Note not found");
+    err.statusCode = 404;
+    throw err;
+  }
+
+  const user = await userRepo.findUserByEmail(email);
+  if (!user) {
+    const err = new Error("User not found");
+    err.statusCode = 404;
+    throw err;
+  }
+
+  const deleted = await noteShareRepo.deleteShare({
+    noteId,
+    sharedWithUserId: user.id,
+  });
+
+  if (!deleted) {
+    const err = new Error("Share not found");
+    err.statusCode = 404;
+    throw err;
+  }
+
+  return { noteId, unsharedUser: email };
+};
+
 const getSharedWithMe = async ({ userId }) => {
   return noteShareRepo.listSharedWithMe({ userId });
 };
 
-export default { shareNote, getSharedWithMe };
+export default { shareNote, getSharedWithMe, unshareNote };
