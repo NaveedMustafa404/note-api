@@ -1,15 +1,18 @@
 import { Router } from "express";
 import { isAuthenticated } from "../middlewares/auth.middleware.js";
+import { upload } from '../middlewares/upload.middleware.js';
 import {
-  createNote,
-  getAllNotes,
-  getNoteById,
-  updateNote,
-  revertNote,
-  searchNotes,
-  deleteNote,
+    createNote,
+    getAllNotes,
+    getNoteById,
+    updateNote,
+    revertNote,
+    searchNotes,
+    deleteNote,
 } from "../controllers/note.controller.js";
+
 import { shareNote, getSharedWithMe, unshareNote } from "../controllers/share.controller.js";
+import { uploadAttachment, listAttachments } from "../controllers/attachment.controller.js";
 
 const router = Router();
 
@@ -27,5 +30,9 @@ router.delete("/delete/:id", deleteNote);
 router.post("/share/:id", shareNote);
 router.get("/shared-with-me", getSharedWithMe);
 router.delete("/unshare/:id", unshareNote);
+
+//attachment 
+router.post("/attachments/upload/:id", upload.single('file'), uploadAttachment);
+router.get("/attachments/by-note/:id", listAttachments);
 
 export default router;

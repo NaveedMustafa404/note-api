@@ -22,7 +22,7 @@ export const connectDB = () => {
             }
         );
         initModels(sequelize);
-        
+
     }
     return sequelize;
             };

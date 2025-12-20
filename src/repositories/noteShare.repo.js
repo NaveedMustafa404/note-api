@@ -1,50 +1,50 @@
-import { connectDB } from "../config/database.js"; 
+import { connectDB } from "../config/database.js";
 
 const getModels = () => {
-  const sequelize = connectDB();
-  return sequelize.models;
+    const sequelize = connectDB();
+    return sequelize.models;
 };
 
 
 const findShare = async ({ noteId, sharedWithUserId }) => {
-  const { NoteShare } = getModels();
-  return NoteShare.findOne({ where: { noteId, sharedWithUserId } });
+    const { NoteShare } = getModels();
+    return NoteShare.findOne({ where: { noteId, sharedWithUserId } });
 };
 
 const upsertShare = async ({ noteId, sharedWithUserId, permission }) => {
-  const { NoteShare } = getModels();
+    const { NoteShare } = getModels();
 
-  const existing = await NoteShare.findOne({
-    where: { noteId, sharedWithUserId },
-  });
+    const existing = await NoteShare.findOne({
+        where: { noteId, sharedWithUserId },
+    });
 
-  if (existing) {
-    existing.permission = permission;
-    await existing.save();
-    return existing;
-  }
+    if (existing) {
+        existing.permission = permission;
+        await existing.save();
+        return existing;
+    }
 
-  return NoteShare.create({ noteId, sharedWithUserId, permission });
+    return NoteShare.create({ noteId, sharedWithUserId, permission });
 };
 
 const deleteShare = async ({ noteId, sharedWithUserId }) => {
-  const { NoteShare } = getModels();
-  return NoteShare.destroy({ where: { noteId, sharedWithUserId } });
+    const { NoteShare } = getModels();
+    return NoteShare.destroy({ where: { noteId, sharedWithUserId } });
 };
 
 const listSharedWithUser = async ({ sharedWithUserId }) => {
-  const { NoteShare } = getModels();
-  return NoteShare.findAll({
-    where: { sharedWithUserId },
-    order: [["createdAt", "DESC"]],
-  });
+    const { NoteShare } = getModels();
+    return NoteShare.findAll({
+        where: { sharedWithUserId },
+        order: [["createdAt", "DESC"]],
+    });
 };
 
 const listSharedWithMe = async ({ userId }) => {
-  const sequelize = connectDB();
+    const sequelize = connectDB();
 
-  const [rows] = await sequelize.query(
-    `
+    const [rows] = await sequelize.query(
+        `
     SELECT
       n.id AS noteId,
       n.user_id AS ownerId,
@@ -63,16 +63,16 @@ const listSharedWithMe = async ({ userId }) => {
       AND n.deleted_at IS NULL
     ORDER BY ns.created_at DESC
     `,
-    { replacements: { userId } }
-  );
+        { replacements: { userId } }
+    );
 
-  return rows;
+    return rows;
 };
 
 export default {
-  findShare,
-  upsertShare,
-  deleteShare,
-  listSharedWithUser,
-  listSharedWithMe
+    findShare,
+    upsertShare,
+    deleteShare,
+    listSharedWithUser,
+    listSharedWithMe
 };

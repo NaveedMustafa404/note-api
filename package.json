@@ -1,6 +1,7 @@
 {
   "name": "note-api",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
@@ -17,6 +18,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
+    "multer": "^2.0.2",
     "mysql2": "^3.16.0",
     "redis": "^5.10.0",
     "sequelize": "^6.37.7"

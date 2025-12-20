@@ -260,10 +260,11 @@ Authorization: Bearer <ACCESS_TOKEN>
 
 ## 9. Note Sharing (Bonus Feature)
 
-### Share a Note
+### Share and Unshare a Note
 
+TO share a note with another user:
 ```http
-POST /api/notes/:id/share
+POST /api/notes/share/:id
 Authorization: Bearer <ACCESS_TOKEN>
 Content-Type: application/json
 
@@ -276,6 +277,11 @@ Content-Type: application/json
 **Permissions:**
 - `read` → view only
 - `edit` → view and update (version checked)
+To unshare a note:
+```http
+DELETE /api/notes/unshare/:id?email={email}
+Authorization: Bearer <ACCESS_TOKEN>
+```
 
 ### Retrieve Notes Shared With Me
 
@@ -284,6 +290,8 @@ GET /api/notes/shared-with-me
 Authorization: Bearer <ACCESS_TOKEN>
 ```
 
+
+
 ---
 
 ## 10. Attachments (Bonus Feature)
@@ -291,9 +299,10 @@ Authorization: Bearer <ACCESS_TOKEN>
 ### Upload Attachment
 
 ```http
-POST /api/notes/:id/attachments
+POST /api/notes/attachments/upload/:id
 Authorization: Bearer <ACCESS_TOKEN>
 Content-Type: multipart/form-data
+
 ```
 
 - File stored locally
@@ -302,8 +311,10 @@ Content-Type: multipart/form-data
 ### List Attachments
 
 ```http
-GET /api/notes/:id/attachments
+GET /api/notes/attachments/by-note/:id
 Authorization: Bearer <ACCESS_TOKEN>
+
+
 ```
 
 ---
