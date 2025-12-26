@@ -345,7 +345,6 @@ curl -X POST http://localhost:3000/api/notes \
 
 ---
 
-Perfect — here is the **exact README-style section**, minimal and professional, **copy-paste ready**, matching the tone and structure of the rest of your README.
 
 ---
 
